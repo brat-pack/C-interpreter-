@@ -1,0 +1,10 @@
+if ( ) then else
+identifiers
+assignment operator
+comparison operator
+numerical operator
+boolean operator
+not operator
+number
+EOF
+string

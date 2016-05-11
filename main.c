@@ -4,13 +4,15 @@
 
 #include <stdio.h>
 
-FILE *fr; /* declare file pointer */
+
 
 int main(int argc, char* argv[]) {
+    printf("print");
 
+    FILE *fr; /* declare file pointer */
     int c;
 
-    fr = fopen("LICENCE.txt", "rt");
+    fr = fopen("files/files/my.txt", "rb");
 
     while((c = getc(fr)) != EOF)
         putchar(c);
