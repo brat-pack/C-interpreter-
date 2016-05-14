@@ -9,7 +9,6 @@ struct State {
     int is_final;;
 };
 
-
 void clear_state(struct State* n) {
     for (int i = 0; i < 256; i++) {
         if (n->tails[i] != NULL) {
@@ -20,7 +19,6 @@ void clear_state(struct State* n) {
     free(n);
 }
 
-
 struct State* create_state(int is_final) {
     struct State* s = malloc(sizeof(struct State));
     for (int i = 0; i < 256; i++) {
@@ -29,7 +27,6 @@ struct State* create_state(int is_final) {
     s->is_final = is_final;
     return s;
 }
-
 
 
 // Instead of a for loop, this needs to be recursive or something. Going all the way to the end and recursing back.
