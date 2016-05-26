@@ -66,7 +66,7 @@ struct StateList* make_state_list(struct State* state, struct StateList* tail) {
 struct StateList* state_list_append(struct StateList* list, struct State* state) {
     if (list != NULL) {
         if (list->tail != NULL) {
-            list_append(list->tail, state);
+            state_list_append(list->tail, state);
         } else {
             list->tail = make_state_list(state, NULL);
         }
