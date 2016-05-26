@@ -69,7 +69,8 @@ struct NFA* make_union(struct NFA* nfa1, struct NFA* nfa2) {
     link_states_epsilon(nfa1->end, end_state);
     link_states_epsilon(nfa2->end, end_state);
     link_states_epsilon(start_state, nfa1->start);
-    link_states_epsilon(start_state, nfa2->start);
+    link_states_epsilon(start_stat
+    e, nfa2->start);
 
     free(nfa1);
     free(nfa2);
