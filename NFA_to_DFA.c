@@ -68,8 +68,6 @@ struct StateList* find_all_closures(struct State* state){
         clear_list(edges_to_check);
         clear_list(closures);
         Concatenate(not_checked, states_reachable_by_epsilon);
-        clear_list(states_reachable_by_epsilon);
-
         checked = state_list_append(checked, not_checked->head);
         not_checked = not_checked -> tail;
     }
