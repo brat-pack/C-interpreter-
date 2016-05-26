@@ -56,8 +56,8 @@ void* get_state_from_edge(void* edge){
     return returnvalue;
 }
 
-struct StateList* find_all_closures(struct State* state){
-    struct StateList* checked = NULL;
+struct GenericList* find_all_closures(struct State* state){
+    struct GenericList* checked = NULL;
     struct GenericList* not_checked = make_generic_list(state, NULL);
 
     while (not_checked != NULL) {
@@ -68,19 +68,27 @@ struct StateList* find_all_closures(struct State* state){
         clear_list(edges_to_check);
         clear_list(closures);
         Concatenate(not_checked, states_reachable_by_epsilon);
-        checked = state_list_append(checked, not_checked->head);
+        checked = generic_list_append(checked, not_checked->head);
         not_checked = not_checked -> tail;
     }
 
+    return checked;
+}
+
+void print_state_id(void* state) {
+    struct State* s = state;
+    printf("%d\n", s->number);
 }
 
 int main(int argc, char* argv[]) {
-    struct NFA* s = evaluate("[a-cd]p*|lol");
+    struct NFA* s = evaluate("(a|b)*abb");
 
     printf("%d", count_list(s->start->edges));
 
-    struct List* ls = find_closures(s->start->edges);
-    printf("%d", count_list(ls));
+    struct GenericList* ls = find_all_closures(s->start);
+
+    //iterate_generic_list(ls, print_state_id);
+
 
     return 0;
 }

@@ -69,8 +69,7 @@ struct NFA* make_union(struct NFA* nfa1, struct NFA* nfa2) {
     link_states_epsilon(nfa1->end, end_state);
     link_states_epsilon(nfa2->end, end_state);
     link_states_epsilon(start_state, nfa1->start);
-    link_states_epsilon(start_stat
-    e, nfa2->start);
+    link_states_epsilon(start_state, nfa2->start);
 
     free(nfa1);
     free(nfa2);
@@ -143,19 +142,6 @@ struct NFA* evaluate (Expression exp) {
     char* newexp = malloc(strlen(exp));
     strcpy(newexp, exp);
 
-    // Check for union
-    for (int i = 0; i < strlen(exp); i++) {
-        if (peek(newexp) == '|') {
-            char* str = make_substring(exp, 0, i);
-            char* str2 = make_substring(exp, i+1, strlen(exp));
-            return make_union(evaluate(str), evaluate(str2));
-        } else {
-            newexp++;
-        }
-    }
-    newexp = malloc(strlen(exp));
-    strcpy(newexp, exp);
-
     // Check for brackets
     if (peek(exp) == '(') {
         char* newexp = malloc(strlen(exp));
@@ -169,7 +155,7 @@ struct NFA* evaluate (Expression exp) {
             i++;
         }
 
-        char* str = make_substring(exp, 1, i-1);
+        char* str = make_substring(exp, 1, i);
 
         if (next(newexp) == '*') {
             char* str2 = make_substring(exp, i+2, strlen(exp));
@@ -182,6 +168,20 @@ struct NFA* evaluate (Expression exp) {
         }
         return evaluate(str);
     }
+    // Check for union
+    for (int i = 0; i < strlen(exp); i++) {
+        if (peek(newexp) == '|') {
+            char* str = make_substring(exp, 0, i);
+            char* str2 = make_substring(exp, i+1, strlen(exp));
+            return make_union(evaluate(str), evaluate(str2));
+        } else {
+            newexp++;
+        }
+    }
+    newexp = malloc(strlen(exp));
+    strcpy(newexp, exp);
+
+
 
     if (peek(exp) == '[') {
         char* newexp = malloc(strlen(exp));

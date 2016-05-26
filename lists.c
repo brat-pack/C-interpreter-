@@ -7,10 +7,10 @@
 #include "main.h"
 #include "lists.h"
 
-void Iterate_list(struct Genericlist* list,  void* (*f)(void*)){
+void iterate_generic_list(struct GenericList* list, void (*f)(void*)){
     if(list != NULL){
         f(list->head);
-        Iterate_list(list->tail, f);
+        iterate_generic_list(list->tail, f);
     }
 }
 
@@ -26,7 +26,8 @@ struct GenericList* Concatenate(struct GenericList* ls1, struct GenericList* ls2
 struct GenericList* converter(struct List* list){
     if(list != NULL){
         return make_generic_list(list->head, converter(list->tail));
-    } return NULL;
+    }
+    return NULL;
 }
 
 void clear_list(struct GenericList* list){

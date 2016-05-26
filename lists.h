@@ -11,6 +11,7 @@ struct GenericList {
     struct GenericList* tail;
 };
 
+void iterate_generic_list(struct GenericList* list, void (*f)(void*));
 struct GenericList* Concatenate(struct GenericList* ls1, struct GenericList* ls2);
 struct GenericList* make_generic_list(void* h, struct GenericList* tail);
 struct GenericList* generic_list_append(struct GenericList* list, void* value);
