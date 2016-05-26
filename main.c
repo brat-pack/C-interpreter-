@@ -223,7 +223,8 @@ struct NFA* evaluate (Expression exp) {
         return  concatenate_nfa(kleenstar_nfa(make_primitive(consume(&exp))), evaluate(exp));
     }
 
-    return  concatenate_nfa(make_primitive(consume(&exp)), evaluate(exp));
+    char c = consume(&exp);
+    return  concatenate_nfa(make_primitive(c), evaluate(exp));
 
 }
 /*

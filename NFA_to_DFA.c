@@ -85,7 +85,7 @@ int main(int argc, char* argv[]) {
 
     printf("%d", count_list(s->start->edges));
 
-    struct GenericList* ls = find_all_closures(s->start);
+    //struct GenericList* ls = find_all_closures(s->start);
 
     //iterate_generic_list(ls, print_state_id);
 
