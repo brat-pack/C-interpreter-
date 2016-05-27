@@ -54,6 +54,10 @@ void* get_state_from_edge(void* edge){
     return returnvalue;
 }
 
+void* get_edge_from_state(void* state){
+
+}
+
 struct GenericList* find_all_closures(struct State* state){
     struct GenericList* checked = NULL;
     struct GenericList* not_checked = make_generic_list(state, NULL);
@@ -75,6 +79,21 @@ struct GenericList* find_all_closures(struct State* state){
 void print_state_id(void* state) {
     struct State* s = state;
     printf("\tid:%d\n", s->number);
+}
+
+void* check_if_state_in_list(void* head, void* list){
+    struct Edge* edge = head;
+    if(!Contains(list, edge->state)){
+        return generic_list_append(list, edge->state);
+    } else {
+        return list;
+    }
+}
+
+struct GenericList* get_all_states(struct State* state){
+    struct GenericList* list = converter(state->edges);
+    struct GenericList* new_list = NULL;
+    return Fold(list, check_if_state_in_list, new_list);
 }
 
 int main(int argc, char* argv[]) {
