@@ -91,7 +91,8 @@ void* get_state_if_not_in_list(void* head, void* list){
 }
 
 struct GenericList* get_connecting_states(struct State* state) {
-    generic_map(converter(state->edges), get_state_from_edge);
+    struct GenericList* genlist = converter(state->edges);
+    generic_map(genlist, get_state_from_edge);
 }
 
 struct GenericList* get_all_states(struct State* state, struct GenericList* total_states){
