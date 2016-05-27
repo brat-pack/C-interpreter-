@@ -97,13 +97,19 @@ struct GenericList* get_connecting_states(struct State* state) {
 
 struct GenericList* get_all_states(struct State* state, struct GenericList* total_states){
     struct GenericList* connecting_states = get_connecting_states(state);
-    if(!Contains(total_states, state)) {
-        generic_list_append(total_states, state);
+
+    if(!(Contains(total_states, state))) {
+        if (total_states == NULL) total_states = generic_list_append(total_states, state);
+        else generic_list_append(total_states, state);
+
+        while (connecting_states != NULL) {
+            if (!Contains(total_states, connecting_states->head)) {
+                get_all_states(connecting_states->head, total_states);
+            }
+            connecting_states = connecting_states->tail;
+        }
     }
-    while (connecting_states != NULL) {
-        get_all_states(connecting_states->head, total_states);
-        connecting_states = connecting_states->tail;
-    }
+
     return total_states;
 }
 
@@ -114,7 +120,8 @@ int main(int argc, char* argv[]) {
     printf("%d states \n", state_count);
     printf("%d total states \n", generic_list_length(get_all_states(s->start, NULL)));
 
-    //struct GenericList* ls = find_all_closures(s->start);
+    printf("");
+    struct GenericList* ls = find_all_closures(s->start);
     //iterate_generic_list(ls, print_state_id);
 
     //iterate_generic_list(ls, print_state_id);
