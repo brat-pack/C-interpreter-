@@ -92,12 +92,14 @@ void* get_state_if_not_in_list(void* head, void* list){
 
 struct GenericList* get_connecting_states(struct State* state) {
     struct GenericList* genlist = converter(state->edges);
-    generic_map(genlist, get_state_from_edge);
+    return generic_map(genlist, get_state_from_edge);
 }
 
 struct GenericList* get_all_states(struct State* state, struct GenericList* total_states){
     struct GenericList* connecting_states = get_connecting_states(state);
-    total_states = Fold(get_connecting_states(state), get_state_if_not_in_list, total_states);
+    if(!Contains(total_states, state)) {
+        generic_list_append(total_states, state);
+    }
     while (connecting_states != NULL) {
         get_all_states(connecting_states->head, total_states);
         connecting_states = connecting_states->tail;
