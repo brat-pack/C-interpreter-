@@ -11,6 +11,7 @@ struct GenericList {
     struct GenericList* tail;
 };
 
+int generic_list_length(struct GenericList* list);
 void* Fold(struct GenericList* list, void* (*f)(void*, void*),void* acc);
 int Contains(struct GenericList* list, void* val);
 void iterate_generic_list(struct GenericList* list, void (*f)(void*));

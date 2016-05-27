@@ -81,7 +81,7 @@ void print_state_id(void* state) {
     printf("\tid:%d\n", s->number);
 }
 
-void* check_if_state_in_list(void* head, void* list){
+void* get_state_if_not_in_list(void* head, void* list){
     struct Edge* edge = head;
     if(!Contains(list, edge->state)){
         return generic_list_append(list, edge->state);
@@ -90,10 +90,18 @@ void* check_if_state_in_list(void* head, void* list){
     }
 }
 
-struct GenericList* get_all_states(struct State* state){
-    struct GenericList* list = converter(state->edges);
-    struct GenericList* new_list = NULL;
-    return Fold(list, check_if_state_in_list, new_list);
+struct GenericList* get_connecting_states(struct State* state) {
+    generic_map(converter(state->edges), get_state_from_edge);
+}
+
+struct GenericList* get_all_states(struct State* state, struct GenericList* total_states){
+    struct GenericList* connecting_states = get_connecting_states(state);
+    total_states = Fold(get_connecting_states(state), get_state_if_not_in_list, total_states);
+    while (connecting_states != NULL) {
+        get_all_states(connecting_states->head, total_states);
+        connecting_states = connecting_states->tail;
+    }
+    return total_states;
 }
 
 int main(int argc, char* argv[]) {
@@ -101,9 +109,10 @@ int main(int argc, char* argv[]) {
     s->end->is_final = 1;
 
     printf("%d states \n", state_count);
+    printf("%d total states \n", generic_list_length(get_all_states(s->start, NULL)));
 
-    struct GenericList* ls = find_all_closures(s->start);
-    iterate_generic_list(ls, print_state_id);
+    //struct GenericList* ls = find_all_closures(s->start);
+    //iterate_generic_list(ls, print_state_id);
 
     //iterate_generic_list(ls, print_state_id);
 

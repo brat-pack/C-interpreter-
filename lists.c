@@ -7,6 +7,13 @@
 #include "main.h"
 #include "lists.h"
 
+int generic_list_length(struct GenericList* list) {
+    if (list != NULL) {
+        return 1 + generic_list_length(list->tail);
+    }
+    return 0;
+}
+
 void* Fold(struct GenericList* list, void* (*f)(void*, void*),void* acc){
     if(list != NULL){
         return f(list->head, Fold(list->tail,f, acc));
@@ -18,7 +25,7 @@ int Contains(struct GenericList* list, void* val){
         if(list->head == val){
             return 1;
         } else {
-            return Contains(list->tail, val)
+            return Contains(list->tail, val);
         }
     } return 0;
 }
