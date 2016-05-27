@@ -10,8 +10,10 @@
 #include "lists.h"
 
 int state_count = 0;
+int primitives_made = 0;
 
 struct State* make_state() {
+    primitives_made++;
     struct State* state = malloc(sizeof(struct State));
     state->number = state_count;
     state_count++;
@@ -180,8 +182,6 @@ struct NFA* evaluate (Expression exp) {
     }
     newexp = malloc(strlen(exp));
     strcpy(newexp, exp);
-
-
 
     if (peek(exp) == '[') {
         char* newexp = malloc(strlen(exp));

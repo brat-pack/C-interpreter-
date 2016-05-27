@@ -20,8 +20,8 @@ struct GenericList* filter(struct GenericList* list, int (*f)(void*)) {
     if (list != NULL) {
         void* head = list->head;
         struct GenericList* tail = list->tail;
-        if (f(list)) {
-            return make_generic_list(list, filter(tail, f));
+        if (f(head)) {
+            return make_generic_list(list->head, filter(tail, f));
         } else {
             return filter(tail,f);
         }
@@ -37,10 +37,8 @@ struct GenericList* generic_map(struct GenericList* list, void* (*f)(void*)) {
     return NULL;
 }
 
-struct GenericList* find_closures(struct GenericList* edges) {
-    struct GenericList* ls = filter(edges, check_for_closure);
-
-    return filter(edges, check_for_closure);
+struct GenericList* find_closures(struct GenericList* edge_list) {
+    return filter(edge_list, check_for_closure);
 }
 
 int count_list(struct List* edges){
@@ -52,7 +50,7 @@ int count_list(struct List* edges){
 
 void* get_state_from_edge(void* edge){
     struct Edge* edge1 = edge;
-    void* returnvalue = edge1->state;
+    struct State* returnvalue = edge1->state;
     return returnvalue;
 }
 
@@ -62,30 +60,31 @@ struct GenericList* find_all_closures(struct State* state){
 
     while (not_checked != NULL) {
         struct State* state_to_check_for_closures = not_checked->head;
-        struct GenericList* edges_to_check = converter(state_to_check_for_closures->edges);
-        struct GenericList* closures = find_closures(edges_to_check);
-        struct GenericList* states_reachable_by_epsilon = generic_map(closures, get_state_from_edge);
+        struct GenericList* edges_to_check = converter(state_to_check_for_closures->edges); // Type: Edge list
+        struct GenericList* closures = find_closures(edges_to_check); // Type: Edge list
+        struct GenericList* states_reachable_by_epsilon = generic_map(closures, get_state_from_edge); // Type: State list
         clear_list(edges_to_check);
         clear_list(closures);
         Concatenate(not_checked, states_reachable_by_epsilon);
         checked = generic_list_append(checked, not_checked->head);
         not_checked = not_checked -> tail;
     }
-
     return checked;
 }
 
 void print_state_id(void* state) {
     struct State* s = state;
-    printf("%d\n", s->number);
+    printf("\tid:%d\n", s->number);
 }
 
 int main(int argc, char* argv[]) {
     struct NFA* s = evaluate("(a|b)*abb");
+    s->end->is_final = 1;
 
-    printf("%d", count_list(s->start->edges));
+    printf("%d states \n", state_count);
 
-    //struct GenericList* ls = find_all_closures(s->start);
+    struct GenericList* ls = find_all_closures(s->start);
+    iterate_generic_list(ls, print_state_id);
 
     //iterate_generic_list(ls, print_state_id);
 

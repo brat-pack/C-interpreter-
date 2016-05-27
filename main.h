@@ -5,6 +5,8 @@
 #ifndef C_INTERPRETER_MAIN_H
 #define C_INTERPRETER_MAIN_H
 
+int primitives_made;
+int state_count;
 struct State;
 struct Edge;
 struct List;
