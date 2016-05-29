@@ -1,7 +1,3 @@
-//
-// Created by Moro on 13/05/16.
-//
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -250,10 +246,3 @@ struct NFA* evaluate (Expression exp) {
     return concatenate_nfa(primitive, evaluate(exp));
 
 }
-
-/*
-int main(int argc, char* argv[]) {
-    struct NFA* s = evaluate("(a|b)*abb");
-    printf("hi");
-    return 0;
-}*/

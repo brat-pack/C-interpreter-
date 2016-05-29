@@ -1,7 +1,3 @@
-//
-// Created by Moro on 23/05/16.
-//
-
 #ifndef C_INTERPRETER_LISTS_H
 #define C_INTERPRETER_LISTS_H
 
