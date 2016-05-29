@@ -6,25 +6,26 @@
 #define C_INTERPRETER_LISTS_H
 
 
-struct GenericList {
+struct List {
     void* head;
-    struct GenericList* tail;
+    struct List* tail;
 };
 
-int generic_list_length(struct GenericList* list);
-void* Fold(struct GenericList* list, void* (*f)(void*, void*),void* acc);
-int Contains(struct GenericList* list, void* val);
-void iterate_generic_list(struct GenericList* list, void (*f)(void*));
-struct GenericList* Concatenate(struct GenericList* ls1, struct GenericList* ls2);
-struct GenericList* make_generic_list(void* h, struct GenericList* tail);
-struct GenericList* generic_list_append(struct GenericList* list, void* value);
-struct StateList* make_state_list(struct State*, struct StateList*);
-struct StateList* state_list_append(struct StateList*, struct State*);
-struct List* make_list(struct Edge* edge, struct List* tail);
-struct NFAList* make_nfa_list(struct NFA* nfa, struct NFAList* tail);
-struct List* list_append(struct List* list, struct Edge* edge);
-struct NFAList* list_nfa_append(struct NFAList* list, struct NFA* nfa);
-void clear_list(struct GenericList* list);
-struct GenericList* converter(struct List* list);
+// Generic stuff for lists
+struct List* list_create(void* h, struct List* tail);
+void list_clear(struct List* list);
+int list_length(struct List* list);
+struct List* list_append(struct List* list, void* value);
+int list_contains(struct List* list, void* val);
+struct List* list_concatenate(struct List* ls1, struct List* ls2);
 
+// Functional stuff
+void list_iterate(struct List* list, void (*f)(void*));
+struct List* list_map(struct List* list, void* (*f)(void*));
+void* list_fold(struct List* list, void* (*f)(void*, void*),void* acc);
+struct List* list_filter(struct List* list, int (*f)(void*));
+
+// Legacy functions
+// TODO: Remove after dependency is gone.
+struct List* list_converter(struct List* list);
 #endif //C_INTERPRETER_LISTS_H

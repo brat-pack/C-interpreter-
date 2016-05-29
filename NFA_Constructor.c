@@ -5,23 +5,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "main.h"
+#include "NFA_Constructor.h"
 #include "reader.h"
 #include "lists.h"
 
+// Global counter used to give each state a unique id.
 int state_count = 0;
-int primitives_made = 0;
 
+// Create a state.
 struct State* make_state() {
-    primitives_made++;
     struct State* state = malloc(sizeof(struct State));
     state->number = state_count;
     state_count++;
+
     state->is_final = 0;
     state->edges = NULL;
     return state;
 };
 
+// Create an edge
 struct Edge* make_edge(struct State* state, char c) {
     struct Edge* edge = malloc(sizeof(struct Edge));
     edge->state = state;
@@ -29,15 +31,18 @@ struct Edge* make_edge(struct State* state, char c) {
     return edge;
 };
 
+// Create an edge transition between two states on the character c.
 void link_states(struct State* s1, struct State* s2, char c) {
     struct Edge* new_edge = make_edge(s2, c);
     s1->edges = list_append(s1->edges, new_edge);
 }
 
+// Create an epsilon edge transition between two states
 void link_states_epsilon(struct State* s1, struct State* s2) {
     link_states(s1, s2, '\0');
 }
 
+// Construct an NFA out of two states.
 struct NFA* make_nfa(struct State* s1, struct State* s2) {
     struct NFA* nfa = malloc(sizeof(struct NFA));
     nfa->start = s1;
@@ -45,6 +50,7 @@ struct NFA* make_nfa(struct State* s1, struct State* s2) {
     return nfa;
 }
 
+// Create the most primitive NFA. Two states connected by a single edge. Used for 'c'
 struct NFA* make_primitive(char c) {
     struct State* s1 = make_state();
     struct State* s2 = make_state();
@@ -53,6 +59,7 @@ struct NFA* make_primitive(char c) {
     return nfa;
 }
 
+// Concatenate two NFA's together to form a new NFA. Used for ex. for ab
 struct NFA* concatenate_nfa(struct NFA* nfa1, struct NFA* nfa2) {
     if (nfa2 == NULL) return nfa1;
     free(nfa1->end->edges);
@@ -64,6 +71,7 @@ struct NFA* concatenate_nfa(struct NFA* nfa1, struct NFA* nfa2) {
     return concatenated_nfa;
 };
 
+// Function for the union algorithm. Creates a union between two states. Used for |
 struct NFA* make_union(struct NFA* nfa1, struct NFA* nfa2) {
     struct State* start_state = make_state();
     struct State* end_state = make_state();
@@ -79,6 +87,7 @@ struct NFA* make_union(struct NFA* nfa1, struct NFA* nfa2) {
     return make_nfa(start_state, end_state);
 }
 
+// Function for the kleenstar NFA. Creates a kleenstar out of a single NFA. Used for *
 struct NFA* kleenstar_nfa(struct NFA* nfa) {
     struct State* start_state = make_state();
     struct State* end_state = make_state();
@@ -93,37 +102,42 @@ struct NFA* kleenstar_nfa(struct NFA* nfa) {
     return make_nfa(start_state, end_state);
 }
 
-struct NFA* make_match_multiple(struct NFAList* nfas, int list_length) {
+// Links a list of NFA's to a new start state and a single end state. Used for evaluate match
+// multiple and create range.
+struct NFA* make_match_multiple(struct List* nfas, int list_length) {
     struct State* start_state = make_state();
     struct State* end_state = make_state();
-    struct NFAList* ls = nfas;
+    struct List* ls = nfas;
 
     for (int i = 0; i < list_length; i++) {
         struct NFA* nfa = nfas->head;
 
         link_states_epsilon(start_state, nfa->start);
         link_states_epsilon(nfa->end, end_state);
-        struct NFAList* x = nfas;
+        struct List* x = nfas;
         free(x->head);
         nfas = nfas->tail;
     }
     return make_nfa(start_state, end_state);
 }
 
+// Creates primitives from a range of characters all linking to the same
+// end state and originating from the same start state. For example a-z
 struct NFA* create_range(int a, int b) {
-    struct NFAList* ls = NULL;
+    struct List* ls = NULL;
     int i = 0;
 
     for (a; a <= b; a++) {
         struct NFA* nfa = make_primitive(a);
-        ls = list_nfa_append(ls, nfa);
+        ls = list_append(ls, nfa);
         i++;
     }
     return make_match_multiple(ls, i);
 }
 
+// Creates a match multiple for each subexpression. Used in []
 struct NFA* evaluate_multiple_choice(Expression exp) {
-    struct NFAList* ls = NULL;
+    struct List* ls = NULL;
     int i = 0;
 
     while (peek(exp) != '\0') {
@@ -132,14 +146,15 @@ struct NFA* evaluate_multiple_choice(Expression exp) {
             char c1 = consume(&exp);
             exp++;
             char c2 = consume(&exp);
-            ls = list_nfa_append(ls, create_range(c1, c2));
+            ls = list_append(ls, create_range(c1, c2));
         } else {
-            ls = list_nfa_append(ls, make_primitive(consume(&exp)));
+            ls = list_append(ls, make_primitive(consume(&exp)));
         }
     }
     return make_match_multiple(ls, i);
 }
 
+// Main evaluation loop
 struct NFA* evaluate (Expression exp) {
     char* newexp = malloc(strlen(exp));
     strcpy(newexp, exp);
@@ -183,6 +198,7 @@ struct NFA* evaluate (Expression exp) {
     newexp = malloc(strlen(exp));
     strcpy(newexp, exp);
 
+    // Check for multiple choice. e.g. [abc]
     if (peek(exp) == '[') {
         char* newexp = malloc(strlen(exp));
         strcpy(newexp, exp);
@@ -207,29 +223,37 @@ struct NFA* evaluate (Expression exp) {
         return evaluate_multiple_choice(str);
     }
 
+    // Checks if end of expression.
     if (peek(exp) == '\0') return NULL;
 
+    // Checks if expression is range.
     if (next(exp) == '-') {
         char c1 = consume(&exp);
         exp++;
         char c2 = consume(&exp);
-        if (next(exp) == '*') {
+        if (next(exp) == '*') { // If followed by kleenstar
             return concatenate_nfa(kleenstar_nfa(create_range(c1, c2)), evaluate(exp));
         }
         return concatenate_nfa(create_range(c1, c2), evaluate(exp));
     }
 
+    // Checks if the expression is a kleenstar
     if (next(exp) == '*') {
         return  concatenate_nfa(kleenstar_nfa(make_primitive(consume(&exp))), evaluate(exp));
     }
 
+
     char c = consume(&exp);
-    return  concatenate_nfa(make_primitive(c), evaluate(exp));
+    // If all else fails, it's just a primitive.
+    struct NFA* primitive = make_primitive(c);
+
+    return concatenate_nfa(primitive, evaluate(exp));
 
 }
+
 /*
 int main(int argc, char* argv[]) {
-    struct NFA* s = evaluate("[a-cd]p*|lol");
+    struct NFA* s = evaluate("(a|b)*abb");
     printf("hi");
     return 0;
 }*/

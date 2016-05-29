@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "lists.h"
-#include "main.h"
+#include "NFA_Constructor.h"
 
 int check_for_closure(void* edge) {
     struct Edge* edge1 = edge;
@@ -16,26 +16,6 @@ int check_for_closure(void* edge) {
     return 0;
 }
 
-struct GenericList* filter(struct GenericList* list, int (*f)(void*)) {
-    if (list != NULL) {
-        void* head = list->head;
-        struct GenericList* tail = list->tail;
-        if (f(head)) {
-            return make_generic_list(list->head, filter(tail, f));
-        } else {
-            return filter(tail,f);
-        }
-    } else {
-        return NULL;
-    }
-}
-
-struct GenericList* generic_map(struct GenericList* list, void* (*f)(void*)) {
-    if (list != NULL) {
-        return make_generic_list(f(list->head), generic_map(list->tail, f));
-    }
-    return NULL;
-}
 
 struct GenericList* find_closures(struct GenericList* edge_list) {
     return filter(edge_list, check_for_closure);
@@ -113,6 +93,7 @@ struct GenericList* get_all_states(struct State* state, struct GenericList* tota
     return total_states;
 }
 
+/*
 int main(int argc, char* argv[]) {
     struct NFA* s = evaluate("(a|b)*abb");
     s->end->is_final = 1;
@@ -128,4 +109,4 @@ int main(int argc, char* argv[]) {
 
 
     return 0;
-}
+}*/

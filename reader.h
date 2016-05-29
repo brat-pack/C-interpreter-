@@ -11,8 +11,6 @@ char next(char* str);
 
 char consume(char** str);
 
-int eat(char** str, char c);
-
 char* make_substring(char* str, int b, int e);
 
 

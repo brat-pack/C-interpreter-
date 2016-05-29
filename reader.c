@@ -5,16 +5,19 @@
 #include <stdlib.h>
 #include <string.h>
 
+// Returns current char without consuming.
 char peek(char* str) {
     return str[0];
 }
 
+// Returns char after current char without consuming.
 char next(char* str) {
     str++;
     char c = *str;
     return c;
 }
 
+// Consumes the current char and returns it.
 char consume(char** str) {
     char* f = *str;
     f++;
@@ -23,17 +26,8 @@ char consume(char** str) {
     return c;
 }
 
-int eat(char** str, char c) {
-    char* x = *str;
-    x++;
-    if (str[0][0] == c) {
-        *str = x;
-        return c;
-    }
-    *str = x;
-    return 0;
-}
-
+// Given a string, and two ints (a and b). Return a new string starting with character a
+// and ending at character location b.
 char* make_substring(char* str, int b, int e) {
     char* new_string = malloc(sizeof(int) * (e - b) + 1);
     int i;

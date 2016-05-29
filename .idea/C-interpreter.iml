@@ -2,14 +2,14 @@
 <module type="CPP_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/NFA_Constructor.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/NFA_to_DFA.c" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/main.c" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/lists.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/reader.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/NFA_Constructor.c" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/lists.c" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/reader.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/reader.c" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/main.h" isTestSource="false" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library">
