@@ -4,13 +4,17 @@
 #include "lists.h"
 #include "NFA_Constructor.h"
 
-// Checks if an edge is an epislon.
-int check_for_closure(void* edge) {
+int check_for_character_transition(void* edge, char c) {
     struct Edge* edge1 = edge;
-    if (edge1->c == '\0') {
+    if (edge1->c == c) {
         return 1;
     }
     return 0;
+}
+
+// Checks if an edge is an epislon.
+int check_for_closure(void* edge) {
+    return check_for_character_transition(edge, '\0');
 }
 
 // Returns a list of edges.
@@ -91,6 +95,22 @@ struct List* calculate_all_closures(struct List* state){
         state = state->tail;
     }
     return all_closures;
+}
+
+struct List* Move(struct List* states, char c) {
+    struct List* returnList = NULL;
+    while (states != NULL) {
+        struct State* state = states->head;
+        struct List* edges = state->edges;
+        while (edges != NULL) {
+            if (check_for_character_transition(edges->head, c)) {
+                returnList = list_append(returnList, get_state_from_edge(edges->head));
+            }
+            edges = edges->tail;
+        }
+        states = states->tail;
+    }
+    return returnList;
 }
 
 // IGNORE MAIN
