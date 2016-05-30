@@ -81,8 +81,16 @@ struct List* get_all_states(struct State* state, struct List* total_states){
             connecting_states = connecting_states->tail;
         }
     }
-
     return total_states;
+}
+
+struct List* calculate_all_closures(struct List* state){
+    struct List* all_closures = NULL;
+    while(state != NULL){
+        all_closures = list_append(all_closures, find_all_closures(state->head));
+        state = state->tail;
+    }
+    return all_closures;
 }
 
 // IGNORE MAIN
@@ -93,8 +101,7 @@ int main(int argc, char* argv[]) {
     printf("%d states \n", state_count);
     printf("%d total states \n", list_length(get_all_states(s->start, NULL)));
     printf("");
-
-    struct List* ls = find_all_closures(s->start);
-    print_states(ls);
+    struct List* all_closures = get_all_states(s->start, NULL);
+    calculate_all_closures(all_closures);
     return 0;
 }
