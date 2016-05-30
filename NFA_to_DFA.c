@@ -4,7 +4,7 @@
 #include "lists.h"
 #include "NFA_Constructor.h"
 
-
+// Checks if an edge is an epislon.
 int check_for_closure(void* edge) {
     struct Edge* edge1 = edge;
     if (edge1->c == '\0') {
@@ -13,39 +13,44 @@ int check_for_closure(void* edge) {
     return 0;
 }
 
+// Returns a list of edges.
 struct List* find_closures(struct List* edge_list) {
     return list_filter(edge_list, check_for_closure);
 }
 
+// Returns a state thats connected to an edge.
 void* get_state_from_edge(void* edge){
     struct Edge* edge1 = edge;
     struct State* returnvalue = edge1->state;
     return returnvalue;
 }
 
+// Returns a list of states.
 struct List* find_all_closures(struct State* state){
-    struct List* checked = NULL;
-    struct List* not_checked = list_create(state, NULL);
+    struct List* checked = NULL; // Type: State list
+    // First state is added to the not_checked list.
+    struct List* not_checked = list_create(state, NULL); // Type: State list
 
     while (not_checked != NULL) {
-        struct State* state_to_check_for_closures = not_checked->head;
-        struct List* edges_to_check = list_converter(state_to_check_for_closures->edges); // Type: Edge list
+        struct State* state_to_check_for_closures = not_checked->head; // Extract the current state at the head of not_checked.
+        struct List* edges_to_check = state_to_check_for_closures->edges; // Type: Edge list
         struct List* closures = find_closures(edges_to_check); // Type: Edge list
         struct List* states_reachable_by_epsilon = list_map(closures, get_state_from_edge); // Type: State list
-        list_clear(edges_to_check);
         list_clear(closures);
         list_concatenate(not_checked, states_reachable_by_epsilon);
-        checked = list_append(checked, not_checked->head);
-        not_checked = not_checked -> tail;
+        checked = list_append(checked, not_checked->head); // Add the checked states to the checked list.
+        not_checked = not_checked -> tail; // Go to the next not_checked element.
     }
     return checked;
 }
 
+// Returns a list of connecting states.
 struct List* get_connecting_states(struct State* state) {
-    struct List* genlist = list_converter(state->edges);
+    struct List* genlist = state->edges;
     return list_map(genlist, get_state_from_edge);
 }
 
+// Prints all states with their connecting edges.
 void print_states(struct List* states) {
     while (states != NULL) {
         struct State* state = states->head;
@@ -61,6 +66,7 @@ void print_states(struct List* states) {
     }
 }
 
+// Returns a list of states.
 struct List* get_all_states(struct State* state, struct List* total_states){
     struct List* connecting_states = get_connecting_states(state);
 
@@ -86,13 +92,9 @@ int main(int argc, char* argv[]) {
 
     printf("%d states \n", state_count);
     printf("%d total states \n", list_length(get_all_states(s->start, NULL)));
-
-    print_states(get_all_states(s->start, NULL));
-
     printf("");
-    struct List* ls = find_all_closures(s->start);
-    //iterate_generic_list(ls, print_state_id);
 
-    //iterate_generic_list(ls, print_state_id);
+    struct List* ls = find_all_closures(s->start);
+    print_states(ls);
     return 0;
 }
