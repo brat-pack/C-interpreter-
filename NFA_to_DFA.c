@@ -46,7 +46,20 @@ struct List* get_connecting_states(struct State* state) {
     return list_map(genlist, get_state_from_edge);
 }
 
-
+void print_states(struct List* states) {
+    while (states != NULL) {
+        struct State* state = states->head;
+        printf("State id: %d\n", state->number);
+        struct List* edges = state->edges;
+        while (edges != NULL) {
+            struct Edge* edge = edges->head;
+            printf("%d | ", edge->state->number);
+            edges = edges->tail;
+        }
+        printf("\n");
+        states = states->tail;
+    }
+}
 
 struct List* get_all_states(struct State* state, struct List* total_states){
     struct List* connecting_states = get_connecting_states(state);
@@ -73,6 +86,8 @@ int main(int argc, char* argv[]) {
 
     printf("%d states \n", state_count);
     printf("%d total states \n", list_length(get_all_states(s->start, NULL)));
+
+    print_states(get_all_states(s->start, NULL));
 
     printf("");
     struct List* ls = find_all_closures(s->start);
