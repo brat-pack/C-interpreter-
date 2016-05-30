@@ -97,6 +97,25 @@ struct List* calculate_all_closures(struct List* state){
     return all_closures;
 }
 
+struct List* get_closures_from_set(struct List* states) {
+    struct List* returnList = NULL;
+
+    while (states != NULL) {
+        struct State* s = states->head;
+        struct List* connecting_states = find_all_closures(s);
+        while (connecting_states != NULL) {
+            returnList = list_append(returnList, connecting_states->head);
+            struct List* tail = connecting_states->tail;
+            free(connecting_states);
+            connecting_states = tail;
+        }
+        states = states->tail;
+    }
+
+    return returnList;
+}
+
+// Move function gets all states we can transition to from a set of states on character c.
 struct List* Move(struct List* states, char c) {
     struct List* returnList = NULL;
     while (states != NULL) {
@@ -122,6 +141,9 @@ int main(int argc, char* argv[]) {
     printf("%d total states \n", list_length(get_all_states(s->start, NULL)));
     printf("");
     struct List* all_closures = get_all_states(s->start, NULL);
-    calculate_all_closures(all_closures);
+    all_closures = calculate_all_closures(all_closures);
+    struct List* dtran = get_closures_from_set(Move(all_closures->head, 'a'));
+    print_states(dtran);
+
     return 0;
 }
