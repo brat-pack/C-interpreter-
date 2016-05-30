@@ -49,11 +49,11 @@ struct List* get_connecting_states(struct State* state) {
 void print_states(struct List* states) {
     while (states != NULL) {
         struct State* state = states->head;
-        printf("State id: %d\n", state->number);
+        printf("State id : %d\n", state->number);
         struct List* edges = state->edges;
         while (edges != NULL) {
             struct Edge* edge = edges->head;
-            printf("%d | ", edge->state->number);
+            printf("%d: %c | ", edge->state->number, edge->c);
             edges = edges->tail;
         }
         printf("\n");

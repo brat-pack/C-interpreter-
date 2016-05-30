@@ -172,12 +172,14 @@ struct NFA* evaluate (Expression exp) {
 
         if (next(newexp) == '*') {
             char* str2 = make_substring(exp, i+2, strlen(exp));
-            return concatenate_nfa(kleenstar_nfa(evaluate(str)), evaluate(str2));
+            struct NFA* nfa1 = kleenstar_nfa(evaluate(str));
+            return concatenate_nfa(nfa1, evaluate(str2));
         }
 
         if (next(newexp) != '\0') {
             char* str2 = make_substring(exp, i+1, strlen(exp));
-            return concatenate_nfa(evaluate(str), evaluate(str2));
+            struct NFA* nfa1 = evaluate(str);
+            return concatenate_nfa(nfa1, evaluate(str2));
         }
         return evaluate(str);
     }
@@ -186,7 +188,8 @@ struct NFA* evaluate (Expression exp) {
         if (peek(newexp) == '|') {
             char* str = make_substring(exp, 0, i);
             char* str2 = make_substring(exp, i+1, strlen(exp));
-            return make_union(evaluate(str), evaluate(str2));
+            struct NFA* nfa1 = evaluate(str);
+            return make_union(nfa1, evaluate(str2));
         } else {
             newexp++;
         }
@@ -207,13 +210,15 @@ struct NFA* evaluate (Expression exp) {
         char* str = make_substring(exp, 1, i);
         if (next(newexp) == '*') {
             char* str2 = make_substring(exp, i+2, strlen(exp));
-            return concatenate_nfa(kleenstar_nfa(evaluate_multiple_choice(str)), evaluate(str2));
+            struct NFA* nfa1 = kleenstar_nfa(evaluate_multiple_choice(str));
+            return concatenate_nfa(nfa1, evaluate(str2));
         }
 
 
         if (next(newexp) != '\0') {
             char* str2 = make_substring(exp, i+1, strlen(exp));
-            return concatenate_nfa(evaluate_multiple_choice(str), evaluate(str2));
+            struct NFA* nfa1 = evaluate_multiple_choice(str);
+            return concatenate_nfa(nfa1, evaluate(str2));
         }
 
         return evaluate_multiple_choice(str);
@@ -228,6 +233,8 @@ struct NFA* evaluate (Expression exp) {
         exp++;
         char c2 = consume(&exp);
         if (next(exp) == '*') { // If followed by kleenstar
+            struct NFA* nfa1 = kleenstar_nfa(create_range(c1, c2));
+            struct NFA* nfa2 = evaluate(exp);
             return concatenate_nfa(kleenstar_nfa(create_range(c1, c2)), evaluate(exp));
         }
         return concatenate_nfa(create_range(c1, c2), evaluate(exp));
@@ -235,7 +242,8 @@ struct NFA* evaluate (Expression exp) {
 
     // Checks if the expression is a kleenstar
     if (next(exp) == '*') {
-        return  concatenate_nfa(kleenstar_nfa(make_primitive(consume(&exp))), evaluate(exp));
+        struct NFA* nfa1 = kleenstar_nfa(make_primitive(consume(&exp)));
+        return  concatenate_nfa(nfa1, evaluate(exp));
     }
 
 
