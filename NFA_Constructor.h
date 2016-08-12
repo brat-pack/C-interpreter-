@@ -4,26 +4,27 @@
 
 #ifndef C_INTERPRETER_MAIN_H
 #define C_INTERPRETER_MAIN_H
+#include "lists.h"
 
 int state_count;
 typedef char* Expression;
 enum bool {true = 1, false = 0};
 struct NFA* evaluate(Expression);
 
-struct State {
-    struct List* edges; // List with all edges connecting to other states
+typedef struct State {
+    List* edges; // List with all edges connecting to other states
     int number; // Unique state ID.
     int is_final; // Bool that checks whether the state is a final state
-};
+} State;
 
-struct Edge {
-    struct State* state; // State we connect to.
+typedef struct Edge {
+    State* state; // State we connect to.
     char c; // Character for this transition.
-};
+} Edge;
 
-struct NFA {
-    struct State* start; // State that the NFA starts with.
-    struct State* end; // State that the NFA ends with.
-};
+typedef struct NFA {
+    State* start; // State that the NFA starts with.
+    State* end; // State that the NFA ends with.
+} NFA;
 
 #endif //C_INTERPRETER_MAIN_H
