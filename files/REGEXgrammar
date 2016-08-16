@@ -1,0 +1,31 @@
+REGEX = 
+| TERM REGEX'
+
+REGEX' =
+| ε 
+| '|' REGEX
+
+TERM =
+| CHAR TERM'
+
+TERM' =
+| ε
+| TERM
+| '+' TERM
+| '*' TERM
+| '{' NUM '}'
+
+CHAR =
+| character
+| '(' REGEX ')'
+| '\' CHAR
+| '[' SET ']'
+
+SET = 
+| character SET'
+| '( REGEX ')' SET'
+| character '-' character SET'
+
+SET' =
+| ε
+| SET
