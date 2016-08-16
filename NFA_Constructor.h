@@ -27,4 +27,10 @@ typedef struct NFA {
     State* end; // State that the NFA ends with.
 } NFA;
 
+NFA* Concatenate_NFA(struct NFA* NFA_1, struct NFA* NFA_2);
+NFA* Create_Union_NFA(NFA* NFA_1, NFA* NFA_2);
+NFA* Create_Kleenstar_NFA(NFA* nfa);
+NFA* Create_Plus_NFA(NFA* nfa);
+NFA* Create_Primitive_NFA(char c);
+
 #endif //C_INTERPRETER_MAIN_H

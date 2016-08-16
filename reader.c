@@ -3,22 +3,22 @@
 #include <string.h>
 
 // Returns current char without consuming.
-char peek(char* str) {
+char reader_peek(char* str) {
     return str[0];
 }
 
 // Returns char after current char without consuming.
-char next(char* str) {
+char reader_next(char* str) {
     str++;
     char c = *str;
     return c;
 }
 
 // Consumes the current char and returns it.
-char consume(char** str) {
+char reader_consume(char** str) {
     char* f = *str;
     f++;
-    char c = **str;
+    char c = *str;
     *str = f;
     return c;
 }
