@@ -7,13 +7,13 @@ REGEX' =
 
 TERM =
 | CHAR TERM'
+| CHAR '+' TERM'
+| CHAR '*' TERM'
 
 TERM' =
 | ε
 | TERM
-| '+' TERM
-| '*' TERM
-| '{' NUM '}'
+
 
 CHAR =
 | character
