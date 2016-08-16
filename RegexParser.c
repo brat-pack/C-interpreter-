@@ -7,14 +7,14 @@
 #include "RegexParser.h"
 #include <string.h>
 
-NFA* REGEX(Expression regex)
+NFA* REGEX(Expression* regex)
 {
     NFA* term = TERM(regex);
     NFA* re = REGEX2(term, regex);
     return re;
 }
 
-NFA* REGEX2 (NFA* nfa, Expression regex)
+NFA* REGEX2 (NFA* nfa, Expression* regex)
 {
     if (reader_peek(regex) == '|')
     {
@@ -28,37 +28,36 @@ NFA* REGEX2 (NFA* nfa, Expression regex)
     }
 }
 
-NFA* TERM(Expression regex)
+NFA* TERM(Expression* regex)
 {
     NFA* Char = CHAR(regex);
-    NFA* term = TERM2(Char, regex);
-    return term;
-}
-
-NFA* TERM2(NFA* Char, Expression regex)
-{
-    NFA* term;
+    NFA* term = NULL;
     switch(reader_peek(regex))
     {
-        case '\0':
-            return Char;
         case '+':
             reader_consume(regex);
             Char = Create_Plus_NFA(Char);
-            term = TERM(regex);
-            return Concatenate_NFA(Char, term);
-        case '*':
-            reader_consume(regex);
-            Char = Create_Kleenstar_NFA(Char);
-            term = TERM(regex);
-            return Concatenate_NFA(Char, term);
+            term = TERM2(regex);
         default:
-            term = TERM(regex);
-            return Concatenate_NFA(Char, term);
+            term = TERM2(regex);
+    }
+    if (term != NULL)
+        return Concatenate_NFA(Char, term);
+    return Char;
+}
+
+NFA* TERM2(Expression* regex)
+{
+    switch(reader_peek(regex))
+    {
+        case '\0':
+            return NULL;
+        default:
+            return TERM(regex);
     }
 }
 
-NFA* CHAR(Expression regex)
+NFA* CHAR(Expression* regex)
 {
     switch(reader_peek(regex))
     {
@@ -88,11 +87,12 @@ NFA* CHAR(Expression regex)
     }
 }
 
-NFA* REGEX_Evaluate(char* regex) {
+NFA* REGEX_Evaluate(Expression* regex) {
     return REGEX(regex);
 }
 
 int main()
 {
-    REGEX_Evaluate("ab+");
+        char* c = "ab+a";
+        REGEX_Evaluate(&c);
 }

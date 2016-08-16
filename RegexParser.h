@@ -8,12 +8,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-NFA* REGEX_Evaluate(Expression regex);
-NFA* REGEX(Expression regex);
-NFA* REGEX2 (NFA* nfa, Expression regex);
-NFA* TERM(Expression regex);
-NFA* TERM2(NFA* Char, Expression regex);
-NFA* CHAR(Expression regex);
+NFA* REGEX_Evaluate(Expression* regex);
+NFA* REGEX(Expression* regex);
+NFA* REGEX2 (NFA* nfa, Expression* regex);
+NFA* TERM(Expression* regex);
+NFA* TERM2(Expression* regex);
+NFA* CHAR(Expression* regex);
 
 
 #endif //C_INTERPRETER_REGEXPARSER_H
