@@ -15,11 +15,11 @@ char reader_next(char* str) {
 }
 
 // Consumes the current char and returns it.
-char reader_consume(char** str) {
-    char* f = *str;
-    f++;
+char reader_consume(char* str) {
     char c = *str;
-    *str = f;
+    str++;
+    char* f = str;
+    strcpy(f, str);
     return c;
 }
 
