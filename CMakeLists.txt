@@ -3,6 +3,6 @@ project(C_interpreter)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall")
 
-set(SOURCE_FILES NFA_Constructor.c NFA_Constructor.h reader.c lists.c reader.h lists.h RegexParser.h RegexParser.c)
+set(SOURCE_FILES NFA_Constructor.c NFA_Constructor.h reader.c lists.c reader.h lists.h RegexParser.h RegexParser.c PrettyPrinter.h PrettyPrinter.c)
 file(COPY "files" DESTINATION "files")
 add_executable(C_interpreter ${SOURCE_FILES})
