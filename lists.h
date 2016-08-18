@@ -21,6 +21,7 @@ void List_ClearAndDestroy(List* list);
 List* List_Initialize(List* list, void* value);
 List* List_Append(List* list, void* value);
 List* List_Prepend(List* list, void* value);
+List* List_Remove_At_Index(List* list, int index);
 int List_Contains(List* list, void* value);
 
 List* List_InsertAtIndex(List* list, int index, void* value);
@@ -38,6 +39,7 @@ Node* Node_Prepend(Node* originalNode, void* value);
 Node* Node_Append(Node* originalNode, void* value);
 Node* Node_Link(Node* firstNode, Node* secondNode);
 Node* Node_Insert(Node* beginNode, void* value);
+void Node_ClearContent(Node* node);
 
 #define FOREACH(ITEM, LIST) for(Node* ITEM = LIST->first; ITEM != NULL; ITEM = ITEM->next)
 #endif //C_INTERPRETER_LISTS_H

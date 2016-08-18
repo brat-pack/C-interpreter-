@@ -23,6 +23,52 @@ int List_Contains(List* list, void* value)
     return 0;
 }
 
+List* List_Remove_At_Index(List* list, int index){
+    if(list->count == 0){
+        return list;
+    }
+    else if(list->count < index + 1 || index < 0 ){
+        printf("Index out of range!");
+        exit(1337);
+    }
+
+    if(list->count == 1){
+        free(list->first);
+        list->first = NULL;
+        list->last = NULL;
+        list->count = 0;
+    }
+
+    else if(index == 0){
+        list->first = list->first->next;
+        free(list->first->prev);
+        list->first->prev = NULL;
+        list->count--;
+    }
+
+    else if(index + 1 == list->count){
+        list->last = list->last->prev;
+        free(list->last->next);
+        list->last->next = NULL;
+        list->count--;
+    }
+
+    else {
+        Node *current_node = list->first;
+        while (index > 0) {
+            current_node->next;
+            index--;
+        }
+        current_node->prev->next = current_node->next;
+        current_node->next->prev = current_node->prev;
+        free(current_node);
+        list->count--;
+    }
+
+    return list;
+
+}
+
 List* List_Append(List* list, void* value)
 {
     if (list->count == 0)
@@ -105,7 +151,7 @@ void List_Destroy(List* list)
 
 void List_ClearContent(List* list){
     for (Node* node = list->first; node != NULL; node = node->next) {
-        free(node->value);
+        Node_ClearContent(node);
     }
 }
 
@@ -162,6 +208,6 @@ Node* Node_Create(void* value)
     return node;
 }
 
-
-
-
+void Node_ClearContent(Node* node){
+    free(node->value);
+}

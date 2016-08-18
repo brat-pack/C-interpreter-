@@ -42,7 +42,7 @@ List* get_unique_states(NFA* nfa){
 
     while(unchecked_states->count > 0){
         State* current_state = unchecked_states->first->value;
-        // REMOVE
+        List_Remove_At_Index(unchecked_states, 0);
         if(!list_contains(current_state, checked_states)){
             List_Append(checked_states, current_state);
             List* connected_states = get_connecting_states(current_state);
