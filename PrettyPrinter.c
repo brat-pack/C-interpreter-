@@ -35,6 +35,21 @@ List* get_connecting_states(State* state){
     return connecting_states;
 }
 
+List* get_unique_states(NFA* nfa){
+    List* unchecked_states = List_Create();
+    List* checked_states = List_Create();
+    List_Append(unchecked_states, nfa->start);
+
+    while(unchecked_states->count > 0){
+        State* current_state = unchecked_states->first->value;
+        // REMOVE
+        if(!list_contains(current_state, checked_states)){
+            List_Append(checked_states, current_state);
+            List* connected_states = get_connecting_states(current_state);
+            List_Concatenate(unchecked_states, connected_states);
+        }
+    }
+}
 
 
 
