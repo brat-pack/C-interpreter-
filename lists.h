@@ -39,4 +39,5 @@ Node* Node_Append(Node* originalNode, void* value);
 Node* Node_Link(Node* firstNode, Node* secondNode);
 Node* Node_Insert(Node* beginNode, void* value);
 
+#define FOREACH(ITEM, LIST) for(Node* ITEM = LIST->first; ITEM != NULL; ITEM = ITEM->next)
 #endif //C_INTERPRETER_LISTS_H
