@@ -5,6 +5,7 @@
 #include "NFA_Constructor.h"
 #include "reader.h"
 #include "RegexParser.h"
+#include "PrettyPrinter.h"
 #include <string.h>
 
 NFA* REGEX(Expression* regex)
@@ -93,6 +94,8 @@ NFA* REGEX_Evaluate(Expression* regex) {
 
 int main()
 {
-        char* c = "ab+a";
-        REGEX_Evaluate(&c);
+    char* c = "ab+a";
+    NFA* nfa = REGEX_Evaluate(&c);
+    PrettyPrint_NFA(nfa);
+    
 }

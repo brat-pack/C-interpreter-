@@ -22,6 +22,7 @@ List* List_Initialize(List* list, void* value);
 List* List_Append(List* list, void* value);
 List* List_Prepend(List* list, void* value);
 List* List_Remove_At_Index(List* list, int index);
+List* List_Remove_First(List* list);
 int List_Contains(List* list, void* value);
 
 List* List_InsertAtIndex(List* list, int index, void* value);

@@ -10,4 +10,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+void PrettyPrint_NFA(NFA* nfa);
+
 #endif //C_INTERPRETER_PRETTYPRINTER_H

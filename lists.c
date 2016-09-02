@@ -5,6 +5,12 @@
 
 List* List_Concatenate(List* firstList, List* secondList)
 {
+    if(firstList->count == 0){
+        return secondList;
+    }
+    else if(secondList->count == 0){
+        return firstList;
+    }
     firstList->count = firstList->count + secondList->count;
     Node_Link(firstList->last, secondList->first);
     firstList->last = secondList->last;
@@ -68,6 +74,28 @@ List* List_Remove_At_Index(List* list, int index){
     return list;
 
 }
+
+List* List_Remove_First(List* list){
+    if(list->count == 0){
+        return list;
+    }
+
+    else if(list->count == 1){
+        free(list->first);
+        list->first = NULL;
+        list->last = NULL;
+        list->count = 0;
+    }
+
+    else{
+        list->first = list->first->next;
+        free(list->first->prev);
+        list->first->prev = NULL;
+        list->count--;
+    }
+    return list;
+}
+
 
 List* List_Append(List* list, void* value)
 {
@@ -165,7 +193,9 @@ List* List_Initialize(List* list, void* value)
 }
 
 List* List_Create() {
-    return calloc(0, sizeof(struct List));
+    List* list = calloc(0, sizeof(struct List));
+    list->count = 0;
+    return list;
 }
 
 // NODE LOGIC

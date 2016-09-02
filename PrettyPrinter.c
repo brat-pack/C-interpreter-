@@ -5,6 +5,8 @@
 #include "PrettyPrinter.h"
 #include <string.h>
 #include <stdio.h>
+void Print_state(State* state);
+
 
 int list_contains(State* state, List* list){
     int count = list->count;
@@ -42,14 +44,27 @@ List* get_unique_states(NFA* nfa){
 
     while(unchecked_states->count > 0){
         State* current_state = unchecked_states->first->value;
-        List_Remove_At_Index(unchecked_states, 0);
+        List_Remove_First(unchecked_states);
         if(!list_contains(current_state, checked_states)){
             List_Append(checked_states, current_state);
             List* connected_states = get_connecting_states(current_state);
             List_Concatenate(unchecked_states, connected_states);
         }
     }
+    return checked_states;
 }
+
+void PrettyPrint_NFA(NFA* nfa){
+    List* states = get_unique_states(nfa);
+    List_Iterate(states, Print_state);
+}
+
+void Print_state(State* state){
+    int n = state->number;
+    char str[12];
+    snprintf(str, 12, "%d", n);
+}
+
 
 
 
