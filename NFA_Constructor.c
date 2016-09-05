@@ -15,7 +15,7 @@ void Assign_State_Number(State* state)
 }
 
 State* Create_State() {
-    State* state = calloc(0, sizeof(State));
+    State* state = calloc(1, sizeof(State));
     Assign_State_Number(state);
     state->is_final = 0;
     state->edges = List_Create();
@@ -23,7 +23,7 @@ State* Create_State() {
 };
 
 Edge* Create_Edge(State* state, char c) {
-    Edge* edge = calloc(NULL, sizeof(Edge));
+    Edge* edge = calloc(1, sizeof(Edge));
     edge->state = state;
     edge->c = c;
     return edge;
@@ -42,7 +42,7 @@ void Link_States_On_Epsilon(State* beginState, State* endState) {
 
 // Construct an NFA out of two states.
 NFA* Create_NFA(State* beginState, State* endState) {
-    NFA* nfa = calloc(0, sizeof(struct NFA));
+    NFA* nfa = calloc(1, sizeof(struct NFA));
     nfa->start = beginState;
     nfa->end = endState;
     return nfa;
@@ -59,9 +59,12 @@ NFA* Create_Primitive_NFA(char c) {
 
 // Concatenate two NFA's together to form a new NFA. Used for ex. for ab
 NFA* Concatenate_NFA(struct NFA* NFA_1, struct NFA* NFA_2) {
+    State* s1 = NFA_2->start;
+
     if (NFA_2 == NULL) return NFA_1;
-    List_Destroy(NFA_1->end->edges);
-    NFA_1->end->edges = NFA_2->end->edges;
+    free(NFA_1->end->edges);
+    NFA_1->end->edges = NFA_2->start->edges;
+    Edge* s2 = NFA_1->end->edges->first->value;
     NFA* concatenated_nfa = Create_NFA(NFA_1->start, NFA_2->end);
     free(NFA_1);
     free(NFA_2);

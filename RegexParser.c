@@ -94,7 +94,7 @@ NFA* REGEX_Evaluate(Expression* regex) {
 
 int main()
 {
-    char* c = "a";
+    char* c = "ab";
     NFA* nfa = REGEX_Evaluate(&c);
     PrettyPrint_NFA(nfa);
 

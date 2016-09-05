@@ -6,6 +6,9 @@
 List* List_Concatenate(List* firstList, List* secondList)
 {
     if(firstList->count == 0){
+        firstList->first = secondList->first;
+        firstList->last = secondList->last;
+        firstList->count = secondList->count;
         return secondList;
     }
     else if(secondList->count == 0){
@@ -101,12 +104,17 @@ List* List_Append(List* list, void* value)
 {
     if (list->count == 0)
     {
-        return List_Initialize(list, value);
+        list->count = 1;
+        Node* node = Node_Create(value);
+        list->first = node;
+        list->last = node;
+        return list;
     }
     else
     {
-        Node_Append(list->last, value);
+        Node* appended_node = Node_Append(list->last, value);
         list->count++;
+        list->last = appended_node;
         return list;
     }
 }
@@ -193,7 +201,8 @@ List* List_Initialize(List* list, void* value)
 }
 
 List* List_Create() {
-    List* list = calloc(0, sizeof(struct List));
+    List* list = malloc(sizeof(struct List));
+    //List* list = calloc(1, sizeof(struct List));
     list->count = 0;
     list->first = NULL;
     list->last = NULL;
@@ -235,7 +244,8 @@ Node* Node_Link(Node* firstNode, Node* secondNode)
 
 Node* Node_Create(void* value)
 {
-    Node* node = calloc(0, sizeof(struct Node));
+    Node* node = malloc(sizeof(struct Node));
+    //Node* node = calloc(1, sizeof(struct Node));
     node->value = value;
     node->next = NULL;
     node->prev = NULL;
