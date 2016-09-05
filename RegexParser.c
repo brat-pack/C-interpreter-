@@ -64,7 +64,7 @@ NFA* CHAR(Expression* regex)
     {
         case '\0':
             printf("Invalid regular expression:");
-            printf(regex);
+            printf(*regex);
             exit(-1);
         /*case '(':
             reader_consume(regex);
@@ -94,8 +94,9 @@ NFA* REGEX_Evaluate(Expression* regex) {
 
 int main()
 {
-    char* c = "ab+a";
+    char* c = "a";
     NFA* nfa = REGEX_Evaluate(&c);
     PrettyPrint_NFA(nfa);
-    
+
 }
+

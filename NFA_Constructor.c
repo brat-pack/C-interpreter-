@@ -23,7 +23,7 @@ State* Create_State() {
 };
 
 Edge* Create_Edge(State* state, char c) {
-    Edge* edge = malloc(sizeof(Edge));
+    Edge* edge = calloc(NULL, sizeof(Edge));
     edge->state = state;
     edge->c = c;
     return edge;
@@ -42,7 +42,7 @@ void Link_States_On_Epsilon(State* beginState, State* endState) {
 
 // Construct an NFA out of two states.
 NFA* Create_NFA(State* beginState, State* endState) {
-    NFA* nfa = malloc(sizeof(struct NFA));
+    NFA* nfa = calloc(0, sizeof(struct NFA));
     nfa->start = beginState;
     nfa->end = endState;
     return nfa;

@@ -188,13 +188,15 @@ List* List_Initialize(List* list, void* value)
     Node* node = Node_Create(value);
     list->first = node;
     list->last = node;
-    list->count++;
+    list->count = 1;
     return list;
 }
 
 List* List_Create() {
     List* list = calloc(0, sizeof(struct List));
     list->count = 0;
+    list->first = NULL;
+    list->last = NULL;
     return list;
 }
 
@@ -235,6 +237,8 @@ Node* Node_Create(void* value)
 {
     Node* node = calloc(0, sizeof(struct Node));
     node->value = value;
+    node->next = NULL;
+    node->prev = NULL;
     return node;
 }
 
