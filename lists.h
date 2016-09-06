@@ -2,15 +2,15 @@
 #define C_INTERPRETER_LISTS_H
 
 typedef struct Node {
-    void* value;
     struct Node* next;
     struct Node* prev;
+    void* value;
 } Node;
 
 typedef struct List {
-    int count;
     Node* first;
     Node* last;
+    int count;
 } List;
 
 // Public List Functions

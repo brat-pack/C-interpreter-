@@ -11,8 +11,20 @@ typedef char* Expression;
 enum bool {true = 1, false = 0};
 struct NFA* evaluate(Expression);
 
+typedef struct EdgeNode {
+    struct Node* next;
+    struct Node* prev;
+    struct Edge* value;
+};
+
+typedef struct EdgeList {
+    struct EdgeNode* first;
+    struct EdgeNode* last;
+    int count;
+};
+
 typedef struct State {
-    List* edges; // List with all edges connecting to other states
+    struct EdgeList* edges; // List with all edges connecting to other states
     int number; // Unique state ID.
     int is_final; // Bool that checks whether the state is a final state
 } State;
