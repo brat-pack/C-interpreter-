@@ -7,16 +7,16 @@ REGEX' =
 
 TERM =
 | CHAR TERM'
-| CHAR '+' TERM'
-| CHAR '*' TERM'
 
 TERM' =
 | ε
 | TERM
+| '+' TERM
+| '*' TERM
 
 
 CHAR =
-| character
+| a-z of A-Z
 | '(' REGEX ')'
 | '\' CHAR
 | '[' SET ']'
@@ -43,12 +43,14 @@ TERM =
 | CHAR TERM
 
 CHAR =
+| ε
 | PRIM
 | PRIM '+'
 | PRIM '*'
 | PRIM '?'
 
 PRIM =
+| ε
 | character
 | '(' EXP ')'
 | '[' SET ']'
@@ -61,3 +63,32 @@ SET' =
 | CHAR
 | character '-' character
 
+============================================================================================================================
+=                                                     Version 3                                                            =
+============================================================================================================================
+
+REGEX =
+| UNION
+| CONCAT
+
+UNION =
+| REGEX ‘|’ CONCAT
+
+CONCAT =
+| TERM CONCAT
+| TERM
+
+TERM =
+| STAR
+| ELEMENT
+
+STAR =
+| ELEMENT ‘*’
+| ELEMENT ‘+’
+| ELEMENT ‘?’
+
+ELEMENT =
+| GROUP
+| 
+|
+|

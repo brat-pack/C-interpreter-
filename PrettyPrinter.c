@@ -7,6 +7,17 @@
 #include <stdio.h>
 void Print_state(void* state);
 
+struct StateNode {
+    struct StateNode* next;
+    struct StateNode* prev;
+    State* value;
+};
+
+struct StateList {
+    struct StateNode* first;
+    struct StateNode* last;
+    int count;
+};
 
 int list_contains(State* state, List* list)
 {
@@ -41,8 +52,8 @@ List* get_connecting_states(State* state)
 
 List* get_unique_states(NFA* nfa)
 {
-    List* unchecked_states = List_Create();
-    List* checked_states = List_Create();
+    struct StateList* unchecked_states = List_Create();
+    struct StateList* checked_states = List_Create();
     unchecked_states = List_Append(unchecked_states, nfa->start);
 
     while(unchecked_states->count > 0){
@@ -59,7 +70,7 @@ List* get_unique_states(NFA* nfa)
 
 void PrettyPrint_NFA(NFA* nfa)
 {
-    List* states = get_unique_states(nfa);
+    struct StateList* states = get_unique_states(nfa);
     List_Iterate(states, Print_state);
 }
 

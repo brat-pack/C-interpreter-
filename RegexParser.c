@@ -35,10 +35,13 @@ NFA* TERM(Expression* regex)
     NFA* term = NULL;
     switch(reader_peek(regex))
     {
+        //case '|':
+            //break;
         case '+':
             reader_consume(regex);
             Char = Create_Plus_NFA(Char);
             term = TERM2(regex);
+            break;
         default:
             term = TERM2(regex);
     }
@@ -83,8 +86,13 @@ NFA* CHAR(Expression* regex)
         case '\\':
             reader_consume(regex);
             return Create_Primitive_NFA(reader_consume(regex));
-        default:
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
             return Create_Primitive_NFA(reader_consume(regex));
+        default:
+            return NULL;
     }
 }
 
@@ -94,7 +102,7 @@ NFA* REGEX_Evaluate(Expression* regex) {
 
 int main()
 {
-    char* c = "ab";
+    char* c = "ab|cd";
     NFA* nfa = REGEX_Evaluate(&c);
     PrettyPrint_NFA(nfa);
 

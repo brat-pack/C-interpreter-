@@ -221,7 +221,7 @@ Node* Node_Append(Node* originalNode, void* value)
 {
     Node* newNode = Node_Create(value);
     Node_Link(originalNode, newNode);
-    return originalNode;
+    return newNode;
 }
 
 Node* Node_Insert(Node* beginNode, void* value)
