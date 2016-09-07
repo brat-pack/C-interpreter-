@@ -11,6 +11,11 @@
 NFA* REGEX(Expression* regex)
 {
     NFA* term = TERM(regex);
+    if (term == NULL) {
+        printf("Invalid regular expression:");
+        printf(*regex);
+        exit(-1);
+    }
     NFA* re = REGEX2(term, regex);
     return re;
 }
@@ -23,20 +28,27 @@ NFA* REGEX2 (NFA* nfa, Expression* regex)
         NFA* re = REGEX(regex);
         return Create_Union_NFA(nfa, re);
     }
-    else
+    else if (reader_peek(regex) == '\0')
     {
         return nfa;
+    }
+    else {
+        printf("Invalid regular expression:");
+        printf(*regex);
+        exit(-1);
     }
 }
 
 NFA* TERM(Expression* regex)
 {
     NFA* Char = CHAR(regex);
+    if (Char == NULL) {
+        return NULL;
+    }
+
     NFA* term = NULL;
     switch(reader_peek(regex))
     {
-        //case '|':
-            //break;
         case '+':
             reader_consume(regex);
             Char = Create_Plus_NFA(Char);
