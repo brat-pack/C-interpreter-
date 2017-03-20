@@ -16,6 +16,7 @@ TERM' =
 
 
 CHAR =
+| ε
 | a-z of A-Z
 | '(' REGEX ')'
 | '\' CHAR
@@ -40,55 +41,82 @@ REGEX =
 
 TERM =
 | CHAR
-| CHAR TERM
+| CHAR TERM’
+
+TERM’ =
+| TERM
+| '+'
+| '*'
+| ‘?’
+| '+' TERM
+| '*' TERM
+| ‘?’ TERM
 
 CHAR =
-| ε
-| PRIM
-| PRIM '+'
-| PRIM '*'
-| PRIM '?'
-
-PRIM =
-| ε
-| character
+| ALPHANUM
+| SYMBOL
 | '(' EXP ')'
 | '[' SET ']'
- 
+
 SET =
 | SET'
-| SET SET'
+| SET' SET
+
+ALPHANUM =
+| A ... Z
+| a ... z 
+| 0 ... 9
+
+SYMBOL =
+| ‘\’ any_character
+| ‘_’
+| ‘-‘
 
 SET' =
-| CHAR
-| character '-' character
+| ALPHANUM
+| SYMBOL
+| ALPHANUM '-' ALPHANUM
 
 ============================================================================================================================
 =                                                     Version 3                                                            =
 ============================================================================================================================
 
-REGEX =
-| UNION
-| CONCAT
+<regexp> ::= 
+| <union>
+| <concat>
+<union> ::= 
+| <regexp> "|" <concat>
+<concat> ::= 
+| <term><concat>
+| <term>
+<term> ::= 
+| <star>
+| <element>
+<star> ::=
+|<element>*
+<element> ::= 
+| <group> 
+| <char> 
+| <emptySet> 
+| <emptyStr> 
+<group> ::=
+| (<regexp>)
+<char> ::=
+| <alphanum>
+| <symbol>
+| <white>
 
-UNION =
-| REGEX ‘|’ CONCAT
+<alphanum> ::= 
+| A ... Z
+| A ... Z
+| 0 ... 1
+<symbol> ::=
+<sp> ::=
 
-CONCAT =
-| TERM CONCAT
-| TERM
+<metachar> ::=
 
-TERM =
-| STAR
-| ELEMENT
+<white> ::=
 
-STAR =
-| ELEMENT ‘*’
-| ELEMENT ‘+’
-| ELEMENT ‘?’
+<tab> ::=
 
-ELEMENT =
-| GROUP
-| 
-|
-|
+<vtab> ::= <nline> ::= <emptySet> ::= <emptyStr> ::=

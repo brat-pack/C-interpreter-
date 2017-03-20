@@ -112,11 +112,29 @@ NFA* REGEX_Evaluate(Expression* regex) {
     return REGEX(regex);
 }
 
-int main()
+int main(int argc, char *argv[])
 {
-    char* c = "ab|cd";
-    NFA* nfa = REGEX_Evaluate(&c);
-    PrettyPrint_NFA(nfa);
+    FILE *fp;
+    long lSize;
+    char *buffer;
 
+    fp = fopen (argv[1] , "rb" );
+    if( !fp ) perror(argv[1]),exit(1);
+
+    fseek( fp , 0L , SEEK_END);
+    lSize = ftell( fp );
+    rewind( fp );
+
+/* allocate memory for entire content */
+    buffer = calloc( 1, lSize+1 );
+    if( !buffer ) fclose(fp),fputs("memory alloc fails",stderr),exit(1);
+
+/* copy the file into the buffer */
+    if( 1!=fread( buffer , lSize, 1 , fp) )
+        fclose(fp),free(buffer),fputs("entire read fails",stderr),exit(1);
+
+    fclose(fp);
+    NFA* nfa = REGEX_Evaluate(&buffer);
+    PrettyPrint_NFA(nfa);
 }
 
